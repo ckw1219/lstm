@@ -13,7 +13,7 @@ def tanh_derivative(values):
     return 1. - values ** 2
 
 # createst uniform random array w/ values in [a,b) and shape args
-def rand_arr(a, b, *args): 
+def rand_arr(a, b, *args):  #*args 可变参数，允许输入0个或者任意个参数，调用函数时自动组装为一个tuple
     np.random.seed(0)
     return np.random.rand(*args) * (b - a) + a
 
@@ -42,7 +42,7 @@ class LstmParam:
         self.bf_diff = np.zeros(mem_cell_ct) 
         self.bo_diff = np.zeros(mem_cell_ct) 
 
-    def apply_diff(self, lr = 1):
+    def apply_diff(self, lr = 1):#更新权重
         self.wg -= lr * self.wg_diff
         self.wi -= lr * self.wi_diff
         self.wf -= lr * self.wf_diff
@@ -52,7 +52,7 @@ class LstmParam:
         self.bf -= lr * self.bf_diff
         self.bo -= lr * self.bo_diff
         # reset diffs to zero
-        self.wg_diff = np.zeros_like(self.wg)
+        self.wg_diff = np.zeros_like(self.wg)#每次更新梯度后将其reset为0
         self.wi_diff = np.zeros_like(self.wi) 
         self.wf_diff = np.zeros_like(self.wf) 
         self.wo_diff = np.zeros_like(self.wo) 
@@ -63,13 +63,13 @@ class LstmParam:
 
 class LstmState:
     def __init__(self, mem_cell_ct, x_dim):
-        self.g = np.zeros(mem_cell_ct)
+        self.g = np.zeros(mem_cell_ct) #各种门的状态
         self.i = np.zeros(mem_cell_ct)
         self.f = np.zeros(mem_cell_ct)
         self.o = np.zeros(mem_cell_ct)
         self.s = np.zeros(mem_cell_ct)
         self.h = np.zeros(mem_cell_ct)
-        self.bottom_diff_h = np.zeros_like(self.h)
+        self.bottom_diff_h = np.zeros_like(self.h)#h,s的梯度状态
         self.bottom_diff_s = np.zeros_like(self.s)
     
 class LstmNode:
@@ -82,7 +82,7 @@ class LstmNode:
 
     def bottom_data_is(self, x, s_prev = None, h_prev = None):
         # if this is the first lstm node in the network
-        if s_prev is None: s_prev = np.zeros_like(self.state.s)
+        if s_prev is None: s_prev = np.zeros_like(self.state.s) #第一个节点的输入h,s输入为0
         if h_prev is None: h_prev = np.zeros_like(self.state.h)
         # save data for use in backprop
         self.s_prev = s_prev
@@ -148,7 +148,7 @@ class LstmNetwork():
         Will *NOT* update parameters.  To update parameters,
         call self.lstm_param.apply_diff()
         """
-        assert len(y_list) == len(self.x_list)
+        assert len(y_list) == len(self.x_list) #判断输入和输出的维度
         idx = len(self.x_list) - 1
         # first node only gets diffs from label ...
         loss = loss_layer.loss(self.lstm_node_list[idx].state.h, y_list[idx])
