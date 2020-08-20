@@ -15,6 +15,7 @@ import numpy as np
 # data_xy = c[0:2,:]
 # data_v_theta = c[2:4,:]
 
+print('A')
 def load_data(data_path):
 
     datafile = data_path
