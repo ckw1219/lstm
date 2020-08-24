@@ -1,6 +1,10 @@
 import numpy as np
 import math
 
+
+'''
+单隐藏层LSTM,不调用框架，直接实现
+'''
 #激活函数
 
 class SigmoidActivator(object):
